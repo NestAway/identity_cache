@@ -86,9 +86,9 @@ module IdentityCache
             else
               coder[:class].serialized_attributes.empty?
             end
-          unless empty_serialized_attrs
-            coder = coder.dup
-            coder['attributes'] = coder['attributes'].dup
+          coder[:class].serialized_attributes.each do |key, value|
+            obj_value = coder['attributes'][key]
+            coder['attributes'][key] = value.dump(obj_value) if obj_value && !obj_value.is_a?(String)
           end
           record.init_with(coder)
 
